@@ -1,0 +1,193 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS gardening_db;
+USE gardening_db;
+
+-- Users table
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    fullname VARCHAR(100),
+    bio TEXT,
+    profile_image VARCHAR(255) DEFAULT 'default-avatar.png',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Posts table
+CREATE TABLE posts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    image VARCHAR(255),
+    likes INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Comments table
+CREATE TABLE comments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Likes table
+CREATE TABLE likes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_like (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Plants table (100+ plants)
+CREATE TABLE plants (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    image VARCHAR(255),
+    benefits TEXT,
+    planting_guide TEXT,
+    season VARCHAR(100),
+    harvest_time VARCHAR(100),
+    sun_requirement VARCHAR(100),
+    water_needs VARCHAR(100),
+    difficulty VARCHAR(20) DEFAULT 'Medium'
+);
+
+-- Insert 100+ plants data
+INSERT INTO plants (name, category, benefits, planting_guide, season, harvest_time, sun_requirement, water_needs, difficulty) VALUES
+('Tomato', 'Vegetable', 'Rich in lycopene for heart health, high in vitamin C and potassium', 'Sow seeds indoors 6-8 weeks before last frost. Transplant when soil warms to 60°F. Plant deep, burying 2/3 of stem. Support with stakes or cages. Water consistently to prevent cracking.', 'Spring to Summer', '70-85 days', 'Full sun (6-8 hours)', 'Regular, consistent moisture', 'Medium'),
+('Basil', 'Herb', 'Anti-inflammatory, rich in antioxidants, supports digestion', 'Sow after last frost. Full sun, well-drained soil. Pinch flowers to encourage leaf growth. Harvest leaves regularly for bushier plants.', 'Summer', '60-75 days', 'Full sun to partial shade', 'Moderate, keep soil moist', 'Easy'),
+('Strawberry', 'Berry', 'High in vitamin C, manganese, antioxidants for skin health', 'Plant in early spring. Full sun, well-drained soil. Mulch to retain moisture. Remove runners for larger fruits. Protect from birds with netting.', 'Spring to Early Summer', '4-6 weeks after flowering', 'Full sun', 'Regular watering', 'Medium'),
+('Carrot', 'Root Vegetable', 'Beta-carotene for vision, fiber for digestion, vitamin K', 'Direct sow in loose, sandy soil. Thin seedlings to 2 inches apart. Keep soil consistently moist. Full sun to partial shade.', 'Spring and Fall', '70-80 days', 'Full sun to partial shade', 'Keep soil consistently moist', 'Easy'),
+('Lettuce', 'Leafy Green', 'Low calorie, high in vitamins A and K, hydrating', 'Sow in cool weather. Partial shade in heat. Harvest outer leaves continuously for extended harvest.', 'Spring and Fall', '45-55 days', 'Partial shade to full sun', 'Frequent, shallow watering', 'Easy'),
+('Bell Pepper', 'Vegetable', 'High vitamin C, antioxidants, boosts immunity', 'Start indoors 8-10 weeks before last frost. Transplant after frost. Full sun, rich soil. Stake for support.', 'Summer', '60-90 days', 'Full sun', 'Moderate', 'Medium'),
+('Spinach', 'Leafy Green', 'Iron, calcium, vitamins K,A,C for bone health', 'Sow in cool soil. Partial shade. Harvest baby leaves for best flavor. Plant every 2 weeks for continuous harvest.', 'Spring and Fall', '40-50 days', 'Partial shade', 'Consistent moisture', 'Easy'),
+('Cucumber', 'Vegetable', 'Hydrating, low calorie, good for skin health', 'Sow after frost. Full sun, trellis for climbing. Consistent watering for crisp fruits.', 'Summer', '55-65 days', 'Full sun', 'Regular, deep watering', 'Easy'),
+('Blueberry', 'Berry', 'Antioxidants, brain health, vitamin C', 'Acidic soil (pH 4.5-5.5). Full sun. Mulch with pine needles. Prune in winter.', 'Spring', 'Mid to Late Summer', 'Full sun', 'Consistent moisture', 'Hard'),
+('Radish', 'Root Vegetable', 'Vitamin C, digestive health, low calorie', 'Direct sow, fast growing. Thin to 1-2 inches. Keep moist for tender roots.', 'Spring and Fall', '25-35 days', 'Full sun to partial shade', 'Keep moist', 'Easy'),
+('Mint', 'Herb', 'Digestive aid, relieves nausea, fresh breath', 'Container growing recommended. Partial shade. Moist soil. Harvest regularly.', 'Spring to Fall', 'Continuous', 'Partial shade', 'Consistent moisture', 'Easy'),
+('Potato', 'Root Vegetable', 'Potassium, vitamin B6, fiber, energy', 'Plant seed potatoes in spring. Hill soil around stems. Full sun.', 'Spring', '90-120 days', 'Full sun', 'Moderate, consistent', 'Medium'),
+('Garlic', 'Vegetable', 'Immune booster, heart health, anti-inflammatory', 'Plant cloves in fall. Mulch heavily. Harvest in summer when leaves yellow.', 'Fall', 'Summer (8-9 months)', 'Full sun', 'Moderate', 'Easy'),
+('Broccoli', 'Vegetable', 'Vitamin K, C, fiber, cancer-fighting compounds', 'Start indoors or direct sow. Cool weather crop. Harvest heads before flowering.', 'Spring and Fall', '60-80 days', 'Full sun', 'Consistent moisture', 'Medium'),
+('Kale', 'Leafy Green', 'Superfood, rich in vitamins A,K,C, antioxidants', 'Sow in cool weather. Harvest outer leaves. Tastes sweeter after frost.', 'Spring and Fall', '55-75 days', 'Full sun to partial shade', 'Regular watering', 'Easy'),
+('Zucchini', 'Vegetable', 'Low calorie, vitamin C, potassium', 'Sow after frost. Space plants widely. Harvest when small for best flavor.', 'Summer', '45-60 days', 'Full sun', 'Regular, deep watering', 'Easy'),
+('Sweet Potato', 'Root Vegetable', 'Vitamin A, fiber, antioxidants', 'Plant slips after soil warms. Full sun, loose soil.', 'Spring to Early Summer', '90-120 days', 'Full sun', 'Moderate', 'Medium'),
+('Lemon', 'Citrus', 'Vitamin C, digestive aid, immune support', 'Plant in spring. Full sun, well-drained soil. Protect from frost.', 'Spring', 'Year-round', 'Full sun', 'Regular watering', 'Medium'),
+('Cauliflower', 'Vegetable', 'Vitamin C, K, fiber, antioxidants', 'Start indoors. Cool weather crop. Blanch heads for whiteness.', 'Spring and Fall', '55-80 days', 'Full sun', 'Consistent moisture', 'Hard'),
+('Eggplant', 'Vegetable', 'Fiber, manganese, antioxidants', 'Start indoors. Transplant after frost. Full sun, warm soil.', 'Summer', '65-80 days', 'Full sun', 'Moderate, consistent', 'Medium'),
+('Green Bean', 'Legume', 'Fiber, protein, folate, iron', 'Direct sow after frost. Bush or pole varieties. Harvest regularly.', 'Summer', '50-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Pumpkin', 'Vegetable', 'Vitamin A, fiber, beta-carotene', 'Sow after frost. Large space needed. Harvest when skin hardens.', 'Summer', '90-120 days', 'Full sun', 'Regular, deep watering', 'Medium'),
+('Watermelon', 'Melon', 'Hydrating, lycopene, vitamins A,C', 'Sow after frost. Warm soil. Full sun. Allow space to sprawl.', 'Summer', '80-100 days', 'Full sun', 'Regular, especially during fruit development', 'Medium'),
+('Rosemary', 'Herb', 'Memory enhancement, antioxidant, anti-inflammatory', 'Plant in well-drained soil. Drought tolerant. Prune regularly.', 'Spring to Fall', 'Continuous', 'Full sun', 'Low, drought tolerant', 'Easy'),
+('Thyme', 'Herb', 'Antiseptic, cough relief, digestive aid', 'Plant in well-drained soil. Trim regularly to maintain shape.', 'Spring to Fall', 'Continuous', 'Full sun', 'Low to moderate', 'Easy'),
+('Raspberry', 'Berry', 'Fiber, vitamin C, antioxidants, heart health', 'Plant in spring. Full sun. Prune canes after fruiting.', 'Spring', 'Summer (June-bearing)', 'Full sun', 'Regular, consistent', 'Medium'),
+('Peach', 'Fruit', 'Vitamins A,C, fiber, antioxidants', 'Plant dormant trees in spring. Full sun. Prune annually.', 'Spring', 'Summer (70-100 days)', 'Full sun', 'Regular watering', 'Hard'),
+('Cilantro', 'Herb', 'Digestive aid, antioxidants, heavy metal detox', 'Direct sow. Quick growing. Harvest leaves before bolting.', 'Spring and Fall', '30-45 days', 'Full sun to partial shade', 'Moderate', 'Easy'),
+('Dill', 'Herb', 'Digestive aid, antioxidant, pickling herb', 'Direct sow. Self-seeding. Harvest leaves and seeds.', 'Spring to Summer', '40-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Parsley', 'Herb', 'Vitamin K,C, iron, freshens breath', 'Start indoors or direct sow. Biennial grown as annual.', 'Spring and Fall', '70-90 days', 'Full sun to partial shade', 'Moderate', 'Easy'),
+('Oregano', 'Herb', 'Antioxidant, anti-inflammatory, antimicrobial', 'Plant in full sun. Well-drained soil. Harvest leaves before flowering.', 'Spring to Fall', 'Continuous', 'Full sun', 'Low to moderate', 'Easy'),
+('Onion', 'Vegetable', 'Antioxidants, heart health, immune support', 'Plant sets or seeds in early spring. Full sun, well-drained soil.', 'Spring', '90-110 days', 'Full sun', 'Moderate', 'Easy'),
+('Celery', 'Vegetable', 'Low calorie, vitamin K, hydrating', 'Start indoors. Needs consistent moisture. Blanch stalks for tenderness.', 'Spring', '80-100 days', 'Full sun to partial shade', 'High, constant moisture', 'Hard'),
+('Blackberry', 'Berry', 'Fiber, vitamin C, antioxidants, brain health', 'Plant in spring. Full sun. Trellis for support.', 'Spring', 'Mid to Late Summer', 'Full sun', 'Regular watering', 'Medium'),
+('Grape', 'Fruit', 'Antioxidants, resveratrol, heart health', 'Plant dormant vines in spring. Full sun. Trellis support needed.', 'Spring', 'Late Summer to Fall', 'Full sun', 'Moderate, deep watering', 'Medium'),
+('Pear', 'Fruit', 'Fiber, vitamin C, copper, heart health', 'Plant dormant trees in spring. Full sun. Requires cross-pollination.', 'Spring', 'Late Summer to Fall', 'Full sun', 'Regular watering', 'Medium'),
+('Cherry', 'Fruit', 'Antioxidants, melatonin, anti-inflammatory', 'Plant dormant trees in spring. Full sun. Sweet or sour varieties.', 'Spring', 'Summer (60-90 days)', 'Full sun', 'Regular watering', 'Hard'),
+('Fig', 'Fruit', 'Fiber, calcium, potassium, digestive health', 'Plant in spring. Full sun. Protect from frost. Prune in winter.', 'Spring', 'Summer to Fall', 'Full sun', 'Moderate', 'Medium'),
+('Pomegranate', 'Fruit', 'Antioxidants, vitamin C, heart health', 'Plant in spring. Full sun. Drought tolerant once established.', 'Spring', 'Fall (5-7 months)', 'Full sun', 'Low to moderate', 'Medium'),
+('Asparagus', 'Vegetable', 'Folate, fiber, vitamin K, antioxidants', 'Plant crowns in early spring. Perennial. Don\'t harvest first year.', 'Spring', '2-3 years for full harvest', 'Full sun', 'Regular', 'Hard'),
+('Rhubarb', 'Vegetable', 'Vitamin K, calcium, fiber', 'Plant crowns in early spring. Perennial. Harvest stalks only.', 'Spring', '2 years for full harvest', 'Full sun', 'Regular', 'Medium'),
+('Honeydew', 'Melon', 'Vitamin C, potassium, hydrating', 'Sow after frost. Full sun. Sweet aroma indicates ripeness.', 'Summer', '75-100 days', 'Full sun', 'Regular watering', 'Medium'),
+('Kohlrabi', 'Vegetable', 'Vitamin C, fiber, potassium', 'Direct sow. Cool weather crop. Harvest when bulb size of golf ball.', 'Spring and Fall', '50-60 days', 'Full sun', 'Consistent moisture', 'Easy'),
+('Leek', 'Vegetable', 'Vitamin K, manganese, antioxidant', 'Start indoors. Transplant. Hill soil for blanching.', 'Spring', '90-120 days', 'Full sun', 'Regular', 'Medium'),
+('Okra', 'Vegetable', 'Fiber, vitamin C, folate, magnesium', 'Sow after frost. Warm season. Harvest pods when tender.', 'Summer', '50-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Parsnip', 'Root Vegetable', 'Fiber, vitamin C, potassium', 'Direct sow in spring. Harvest after frost for sweetness.', 'Spring', '100-120 days', 'Full sun', 'Consistent moisture', 'Medium'),
+('Peas', 'Legume', 'Fiber, protein, vitamins A,C,K', 'Sow in early spring. Provide trellis support. Harvest when pods plump.', 'Spring', '55-70 days', 'Full sun to partial shade', 'Moderate', 'Easy'),
+('Turnip', 'Root Vegetable', 'Fiber, vitamin C, calcium', 'Direct sow. Cool weather crop. Harvest roots and greens.', 'Spring and Fall', '40-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Arugula', 'Leafy Green', 'Vitamin K, calcium, peppery flavor', 'Direct sow. Quick growing. Harvest leaves when young.', 'Spring and Fall', '30-40 days', 'Full sun to partial shade', 'Regular', 'Easy'),
+('Swiss Chard', 'Leafy Green', 'Vitamins A,K,C, magnesium', 'Direct sow. Heat tolerant. Harvest outer leaves.', 'Spring to Fall', '50-60 days', 'Full sun to partial shade', 'Regular', 'Easy'),
+('Beetroot', 'Root Vegetable', 'Folate, manganese, fiber', 'Direct sow. Harvest both roots and greens.', 'Spring and Fall', '50-70 days', 'Full sun', 'Consistent moisture', 'Easy'),
+('Bok Choy', 'Leafy Green', 'Vitamins A,C,K, calcium', 'Direct sow. Cool weather. Harvest whole plant or leaves.', 'Spring and Fall', '45-60 days', 'Full sun', 'Consistent moisture', 'Easy'),
+('Fennel', 'Herb', 'Fiber, potassium, digestive aid', 'Direct sow. Bulb and fronds edible. Licorice flavor.', 'Spring', '80-100 days', 'Full sun', 'Regular', 'Medium'),
+('Kiwano', 'Fruit', 'Vitamin C, iron, hydrating', 'Sow after frost. Trellis. Exotic fruit.', 'Summer', '90-100 days', 'Full sun', 'Regular', 'Medium'),
+('Passion Fruit', 'Fruit', 'Vitamin A,C, fiber, antioxidants', 'Plant in spring. Full sun. Trellis support.', 'Spring', 'Summer to Fall', 'Full sun', 'Regular', 'Medium'),
+('Guava', 'Fruit', 'Vitamin C, lycopene, fiber', 'Plant in spring. Full sun. Tropical fruit.', 'Spring', '2-3 years', 'Full sun', 'Regular', 'Medium'),
+('Jalapeno', 'Vegetable', 'Capsaicin, vitamin C, metabolism boost', 'Start indoors. Full sun. Harvest when green or red.', 'Summer', '70-80 days', 'Full sun', 'Moderate', 'Easy'),
+('Habanero', 'Vegetable', 'Capsaicin, antioxidants, vitamin C', 'Start indoors. Full sun. Very hot peppers.', 'Summer', '90-100 days', 'Full sun', 'Moderate', 'Medium'),
+('Sage', 'Herb', 'Antioxidant, memory aid, digestive', 'Plant in well-drained soil. Full sun. Drought tolerant.', 'Spring to Fall', 'Continuous', 'Full sun', 'Low', 'Easy'),
+('Tarragon', 'Herb', 'Digestive aid, antioxidant', 'Plant in spring. Full sun. French tarragon preferred.', 'Spring to Fall', 'Continuous', 'Full sun', 'Moderate', 'Medium'),
+('Bay Laurel', 'Herb', 'Digestive aid, aromatic', 'Container or ground. Full sun. Harvest leaves.', 'Year-round', 'Continuous', 'Full sun', 'Moderate', 'Medium'),
+('Chamomile', 'Herb', 'Calming, digestive aid, tea herb', 'Direct sow. Full sun. Harvest flowers for tea.', 'Spring', '60-70 days', 'Full sun', 'Moderate', 'Easy'),
+('Echinacea', 'Medicinal', 'Immune booster, cold relief', 'Plant in spring. Full sun. Perennial.', 'Spring', '2nd year harvest', 'Full sun', 'Moderate', 'Easy'),
+('Calendula', 'Medicinal', 'Skin healing, anti-inflammatory', 'Direct sow. Full sun. Harvest flowers.', 'Spring', '50-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Lavender', 'Herb', 'Calming, aromatic, sleep aid', 'Plant in well-drained soil. Full sun. Prune after flowering.', 'Spring', '2nd year harvest', 'Full sun', 'Low', 'Easy'),
+('Stevia', 'Herb', 'Natural sweetener, zero calorie', 'Start indoors. Full sun. Harvest leaves.', 'Spring to Summer', '80-100 days', 'Full sun', 'Moderate', 'Medium'),
+('Lemongrass', 'Herb', 'Digestive aid, aromatic', 'Plant in spring. Full sun. Harvest stalks.', 'Spring to Fall', '90-120 days', 'Full sun', 'Regular', 'Medium'),
+('Nasturtium', 'Edible Flower', 'Vitamin C, edible flowers and leaves', 'Direct sow. Full sun. Peppery flavor.', 'Spring to Summer', '50-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Borage', 'Herb', 'Cucumber flavor, edible flowers', 'Direct sow. Self-seeding. Attracts pollinators.', 'Spring', '50-60 days', 'Full sun', 'Moderate', 'Easy'),
+('Artichoke', 'Vegetable', 'Fiber, antioxidants, liver health', 'Start indoors. Perennial in warm climates.', 'Spring', '120-150 days', 'Full sun', 'Regular', 'Hard'),
+('Kumquat', 'Citrus', 'Vitamin C, fiber, edible peel', 'Plant in spring. Full sun. Small citrus.', 'Spring', 'Fall to Winter', 'Full sun', 'Regular', 'Medium'),
+('Lime', 'Citrus', 'Vitamin C, antioxidant, flavor', 'Plant in spring. Full sun. Protect from frost.', 'Spring', 'Year-round', 'Full sun', 'Regular', 'Medium'),
+('Grapefruit', 'Citrus', 'Vitamin C, fiber, metabolism', 'Plant in spring. Full sun. Large tree.', 'Spring', 'Fall to Spring', 'Full sun', 'Regular', 'Medium'),
+('Tangerine', 'Citrus', 'Vitamin C, antioxidants, sweet', 'Plant in spring. Full sun. Easy to peel.', 'Spring', 'Winter', 'Full sun', 'Regular', 'Medium'),
+('Jicama', 'Root Vegetable', 'Fiber, vitamin C, crisp texture', 'Plant after frost. Full sun. Tuber vegetable.', 'Summer', '150-180 days', 'Full sun', 'Regular', 'Medium'),
+('Daikon', 'Root Vegetable', 'Vitamin C, digestive aid', 'Direct sow. Cool weather. Large white radish.', 'Fall', '50-70 days', 'Full sun', 'Consistent moisture', 'Easy'),
+('Wasabi', 'Root Vegetable', 'Antioxidant, antibacterial', 'Shade, constant moisture. Difficult to grow.', 'Spring', '18-24 months', 'Shade', 'High', 'Hard'),
+('Ginger', 'Root', 'Anti-inflammatory, digestive aid', 'Plant rhizomes in spring. Partial shade.', 'Spring', '8-10 months', 'Partial shade', 'Regular', 'Medium'),
+('Turmeric', 'Root', 'Anti-inflammatory, antioxidant', 'Plant rhizomes in spring. Warmth required.', 'Spring', '8-10 months', 'Partial shade', 'Regular', 'Medium'),
+('Malabar Spinach', 'Leafy Green', 'Vitamins A,C, iron', 'Climbing vine. Heat tolerant. Harvest leaves.', 'Summer', '60-70 days', 'Full sun', 'Regular', 'Easy'),
+('Amaranth', 'Leafy Green', 'Protein, iron, calcium', 'Heat tolerant. Harvest leaves and seeds.', 'Summer', '40-50 days', 'Full sun', 'Moderate', 'Easy'),
+('Quinoa', 'Grain', 'Complete protein, fiber, iron', 'Cool weather. Harvest seeds.', 'Spring', '90-120 days', 'Full sun', 'Moderate', 'Medium'),
+('Moringa', 'Tree', 'Iron, calcium, protein, vitamins', 'Tropical tree. Harvest leaves and pods.', 'Spring', '6-8 months', 'Full sun', 'Moderate', 'Medium'),
+('Goji Berry', 'Berry', 'Antioxidants, immune support', 'Plant in spring. Full sun. Hardy shrub.', 'Spring', '2-3 years', 'Full sun', 'Moderate', 'Medium'),
+('Elderberry', 'Berry', 'Immune support, antioxidants', 'Plant in spring. Full sun. Shrub.', 'Spring', '2-3 years', 'Full sun', 'Regular', 'Easy'),
+('Cranberry', 'Berry', 'Urinary tract health, antioxidants', 'Acidic soil. Bogs. Harvest in fall.', 'Spring', '3 years', 'Full sun', 'High', 'Hard'),
+('Mulberry', 'Fruit', 'Iron, vitamin C, antioxidants', 'Fast growing tree. Full sun.', 'Spring', '2-3 years', 'Full sun', 'Moderate', 'Easy'),
+('Quince', 'Fruit', 'Fiber, vitamin C, pectin', 'Plant in spring. Full sun. Fruit for jams.', 'Spring', '3-4 years', 'Full sun', 'Regular', 'Medium'),
+('Medlar', 'Fruit', 'Fiber, vitamin C, unique fruit', 'Plant in spring. Full sun. Bletting required.', 'Spring', '3-4 years', 'Full sun', 'Regular', 'Medium'),
+('Loquat', 'Fruit', 'Vitamin A, fiber, sweet fruit', 'Plant in spring. Full sun. Evergreen tree.', 'Spring', '2-3 years', 'Full sun', 'Regular', 'Medium'),
+('Persimmon', 'Fruit', 'Vitamin A, fiber, antioxidants', 'Plant in spring. Full sun. Astringent varieties.', 'Spring', '3-4 years', 'Full sun', 'Regular', 'Medium'),
+('Nectarine', 'Fruit', 'Vitamins A,C, fiber', 'Plant in spring. Full sun. Smooth skin peach.', 'Spring', '2-3 years', 'Full sun', 'Regular', 'Hard'),
+('Apricot', 'Fruit', 'Vitamin A, fiber, antioxidants', 'Plant in spring. Full sun. Early harvest.', 'Spring', '2-3 years', 'Full sun', 'Regular', 'Hard'),
+('Plum', 'Fruit', 'Vitamin C, fiber, antioxidants', 'Plant in spring. Full sun. European or Japanese.', 'Spring', '3-4 years', 'Full sun', 'Regular', 'Medium'),
+('Almond', 'Nut', 'Vitamin E, protein, healthy fats', 'Plant in spring. Full sun. Needs pollinator.', 'Spring', '3-4 years', 'Full sun', 'Moderate', 'Hard'),
+('Walnut', 'Nut', 'Omega-3, protein, antioxidants', 'Plant in spring. Full sun. Large tree.', 'Spring', '4-5 years', 'Full sun', 'Moderate', 'Medium'),
+('Hazelnut', 'Nut', 'Vitamin E, healthy fats', 'Plant in spring. Full sun. Shrub form.', 'Spring', '3-4 years', 'Full sun', 'Moderate', 'Easy');
+
+-- Create saved_plants table for user favorites
+CREATE TABLE saved_plants (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    plant_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (plant_id) REFERENCES plants(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_saved (user_id, plant_id)
+);
+
+-- Insert sample users (password: 'password123' hashed)
+INSERT INTO users (username, email, password, fullname, bio) VALUES
+('green_thumb', 'gardener@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Green Thumb', 'Passionate organic gardener growing vegetables and herbs'),
+('plant_lover', 'plantlover@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Plant Lover', 'Love growing all types of plants, especially succulents'),
+('urban_farmer', 'urban@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Urban Farmer', 'Container gardening in the city');
+
+-- Insert sample posts
+INSERT INTO posts (user_id, content, likes) VALUES
+(1, 'Just harvested my first tomatoes! They are so juicy and flavorful. The key is consistent watering and full sun. Highly recommend the heirloom varieties!', 15),
+(1, 'My basil is thriving with regular pruning. Pinch off the flowers to keep the leaves tender and flavorful. Great for pesto!', 8),
+(2, 'Tips for dealing with aphids? Found them on my roses. I tried neem oil but they keep coming back.', 12),
+(3, 'Container gardening success! Growing peppers and herbs on my balcony. Self-watering pots make it so easy.', 10);
+
+-- Insert sample comments
+INSERT INTO comments (post_id, user_id, comment) VALUES
+(3, 1, 'Try companion planting with marigolds. They repel aphids naturally. Also ladybugs are great predators!'),
+(3, 2, 'Mix dish soap with water and spray. Works great for soft-bodied insects like aphids.'),
+(1, 3, 'Beautiful! What variety of tomatoes did you grow?');

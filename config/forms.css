@@ -1,0 +1,147 @@
+.form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+.form-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-card h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--green-primary);
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group label i {
+    margin-right: 0.5rem;
+    color: var(--green-primary);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--green-primary);
+    box-shadow: 0 0 0 2px rgba(44, 110, 47, 0.1);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.alert-error {
+    background: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.text-center a {
+    color: var(--blue-bright);
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    text-decoration: underline;
+}
+
+.benefits-list {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.benefits-list h3 {
+    margin-bottom: 1rem;
+    color: var(--green-primary);
+}
+
+.benefits-list ul {
+    list-style: none;
+}
+
+.benefits-list li {
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.benefits-list li i {
+    color: var(--green-primary);
+    font-size: 1rem;
+}
+
+/* Login/Register specific */
+.login-container,
+.register-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        margin: 1rem;
+    }
+    
+    .form-card {
+        padding: 1.5rem;
+    }
+}

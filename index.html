@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GreenThumb Community | 100+ Plant Database</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #e9f5e9 0%, #d4e9f7 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    :root {
+      --green-primary: #2c6e2f;
+      --green-soft: #4caf50;
+      --blue-primary: #1e6f9f;
+      --blue-bright: #2196f3;
+      --red-accent: #d32f2f;
+      --red-soft: #ef5350;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      width: 100%;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, #1b4d1b, #0e3f5e);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-bottom: 3px solid var(--red-accent);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .logo i {
+      color: var(--red-soft);
+      font-size: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #f1f9f0;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      padding: 0.3rem 0.6rem;
+      border-radius: 40px;
+    }
+
+    .nav-links a:hover {
+      background-color: var(--blue-bright);
+      transform: translateY(-2px);
+    }
+
+    .nav-btn {
+      background-color: var(--red-accent);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+    }
+
+    .user-greeting {
+      color: #ffecb3;
+      background: #1b4d1b80;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 32px;
+      box-shadow: 0 12px 24px rgba(0, 32, 0, 0.1);
+      padding: 2rem;
+      margin: 1.5rem 0;
+      border-top: 5px solid var(--blue-primary);
+    }
+
+    .btn {
+      border: none;
+      background: var(--green-primary);
+      color: white;
+      padding: 0.7rem 1.4rem;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--blue-bright);
+    }
+
+    .btn-danger {
+      background: var(--red-accent);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 28px;
+      border: 1px solid #b0bec5;
+      font-size: 1rem;
+    }
+
+    .post-item {
+      background: white;
+      border-radius: 24px;
+      margin-bottom: 1.2rem;
+      padding: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-left: 8px solid var(--green-soft);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      border-bottom: 1px dashed #cfe9df;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      color: var(--red-accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+    .plant-card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .plant-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+    .plant-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #e8f5e9;
+    }
+
+    .plant-info {
+      padding: 1rem;
+    }
+
+    .plant-info h3 {
+      color: var(--green-primary);
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+    }
+
+    .tip-card {
+      background: linear-gradient(135deg, #fff9e8, #f0f7ff);
+      padding: 1.2rem;
+      border-radius: 28px;
+      border-left: 6px solid var(--blue-primary);
+    }
+
+    .footer {
+      background: #0a2f2a;
+      color: #cfe9cf;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border-top: 3px solid var(--red-accent);
+    }
+
+    @media (max-width: 700px) {
+      .navbar { flex-direction: column; }
+      .container { padding: 1rem; }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 600px;
+      width: 90%;
+      margin: 2rem auto;
+      border-radius: 32px;
+      padding: 2rem;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .search-box input {
+      padding-left: 45px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .category-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-chip {
+      background: #e0e7ff;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .filter-chip.active {
+      background: var(--green-primary);
+      color: white;
+    }
+
+    .plant-detail-modal .modal-content {
+      max-width: 700px;
+    }
+
+    .plant-detail-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background: var(--blue-bright);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div id="navbar-container"></div>
+<main id="app-root" class="container"></main>
+<div class="footer">
+  <p><i class="fas fa-seedling" style="color:#ef5350;"></i> GreenThumb Community — 100+ Plants Database | Grow Knowledge, Harvest Health</p>
+</div>
+
+<script>
+  // ============ 100+ PLANT DATABASE ============
+  const generatePlantDatabase = () => {
+    const categories = ["Vegetable", "Fruit", "Herb", "Leafy Green", "Root Vegetable", "Berry", "Citrus", "Medicinal", "Legume", "Melon"];
+    const vegetables = ["Tomato", "Bell Pepper", "Cucumber", "Eggplant", "Okra", "Zucchini", "Pumpkin", "Squash", "Artichoke", "Asparagus", "Broccoli", "Cauliflower", "Cabbage", "Brussels Sprouts", "Kale", "Celery", "Leek", "Rhubarb"];
+    const fruits = ["Apple", "Pear", "Peach", "Plum", "Cherry", "Apricot", "Fig", "Persimmon", "Pomegranate", "Grape", "Kiwi", "Mango", "Papaya", "Banana", "Avocado", "Olive", "Date"];
+    const berries = ["Strawberry", "Blueberry", "Raspberry", "Blackberry", "Cranberry", "Gooseberry", "Elderberry", "Boysenberry", "Currant", "Mulberry"];
+    const citrus = ["Orange", "Lemon", "Lime", "Grapefruit", "Mandarin", "Tangerine", "Kumquat", "Calamondin"];
+    const herbs = ["Basil", "Mint", "Rosemary", "Thyme", "Oregano", "Sage", "Parsley", "Cilantro", "Dill", "Chives", "Tarragon", "Lavender", "Lemon Balm", "Stevia", "Bay Laurel"];
+    const leafyGreens = ["Lettuce", "Spinach", "Swiss Chard", "Arugula", "Watercress", "Mustard Greens", "Collard Greens", "Bok Choy", "Endive", "Radicchio"];
+    const rootVeg = ["Carrot", "Radish", "Beetroot", "Potato", "Sweet Potato", "Turnip", "Parsnip", "Onion", "Garlic", "Shallot", "Ginger", "Turmeric"];
+    const legumes = ["Green Bean", "Pea", "Lentil", "Soybean", "Fava Bean", "Lima Bean", "Chickpea", "Mung Bean", "Black-eyed Pea"];
+    const melons = ["Watermelon", "Cantaloupe", "Honeydew", "Crenshaw", "Galia Melon"];
+
+    const allPlants = [];
+    let id = 1;
+    
+    const addPlants = (list, category, defaultImg) => {
+      list.forEach(name => {
+        allPlants.push({
+          id: id++,
+          name: name,
+          category: category,
+          image: `https://source.unsplash.com/featured/400x300?${encodeURIComponent(name)}+plant,food`,
+          benefits: getBenefits(name, category),
+          planting: getPlantingGuide(name, category),
+          season: getSeason(name, category),
+          harvest: getHarvestTime(name, category),
+          sunRequirement: getSunRequirement(name),
+          waterNeeds: getWaterNeeds(name)
+        });
+      });
+    };
+
+    const getBenefits = (name, cat) => {
+      const benefitsMap = {
+        "Tomato": "Rich in lycopene for heart health, vitamin C", "Spinach": "Iron, calcium, vitamins A,K,C", "Carrot": "Beta-carotene for vision, fiber", "Basil": "Anti-inflammatory, digestive aid", "Mint": "Digestive relief, fresh breath", "Strawberry": "Vitamin C, antioxidants for skin", "Blueberry": "Brain health, antioxidants", "Apple": "Fiber, vitamin C, heart health", "Garlic": "Immune booster, heart health", "Ginger": "Anti-nausea, anti-inflammatory", "Lettuce": "Low calorie, vitamins A and K", "Cucumber": "Hydrating, skin health", "Bell Pepper": "High vitamin C, immunity", "Broccoli": "Vitamin K, C, fiber", "Kale": "Superfood, antioxidants", "Potato": "Potassium, vitamin B6", "Sweet Potato": "Vitamin A, fiber", "Onion": "Antioxidants, heart health", "Lemon": "Vitamin C, digestive aid", "Mint": "Digestive aid, fresh breath"
+      };
+      return benefitsMap[name] || `Rich in essential nutrients, supports ${cat === "Vegetable" ? "digestive health" : cat === "Fruit" ? "immune system" : "overall wellness"}`;
+    };
+
+    const getPlantingGuide = (name, cat) => {
+      if(cat === "Root Vegetable") return `Direct sow in loose, well-drained soil. Plant seeds 1/2 inch deep. Thin seedlings to proper spacing. Keep soil consistently moist. Full sun to partial shade.`;
+      if(cat === "Herb") return `Start seeds indoors or direct sow after frost. Full sun to partial shade. Well-drained soil. Pinch back to encourage bushiness. Harvest leaves regularly.`;
+      if(cat === "Leafy Green") return `Sow in cool weather. Partial shade in summer. Keep soil moist. Harvest outer leaves for continuous production.`;
+      if(cat === "Fruit" || cat === "Berry") return `Plant in spring. Full sun required. Well-drained fertile soil. Mulch around base. Prune annually. Protect from birds.`;
+      return `Plant in spring after last frost. Full sun (6-8 hours). Rich, well-drained soil. Water consistently. Support if needed (staking/trellising). Fertilize monthly.`;
+    };
+
+    const getSeason = (name, cat) => {
+      if(cat === "Leafy Green" || name === "Spinach" || name === "Lettuce") return "Spring and Fall";
+      if(cat === "Root Vegetable") return "Spring and Fall";
+      if(cat === "Herb") return "Spring to Fall";
+      if(cat === "Fruit" || cat === "Berry") return "Spring planting, Summer harvest";
+      return "Spring to Summer";
+    };
+
+    const getHarvestTime = (name, cat) => {
+      const harvestMap = { "Radish": "25-30 days", "Lettuce": "45-55 days", "Spinach": "40-50 days", "Carrot": "70-80 days", "Tomato": "70-85 days", "Cucumber": "55-65 days", "Bell Pepper": "60-90 days", "Strawberry": "4-6 weeks after flowering", "Basil": "60-75 days", "Potato": "90-120 days", "Apple": "Fall (100-200 days)", "Blueberry": "Mid to Late Summer" };
+      return harvestMap[name] || (cat === "Herb" ? "Continuous harvest" : "60-90 days");
+    };
+
+    const getSunRequirement = (name) => {
+      const shadePlants = ["Lettuce", "Spinach", "Mint", "Parsley"];
+      return shadePlants.includes(name) ? "Partial shade to full sun" : "Full sun (6-8 hours daily)";
+    };
+
+    const getWaterNeeds = (name) => {
+      const highWater = ["Cucumber", "Lettuce", "Spinach", "Strawberry"];
+      return highWater.includes(name) ? "Regular, keep soil consistently moist" : "Moderate, water when top inch is dry";
+    };
+
+    addPlants(vegetables, "Vegetable", "vegetable");
+    addPlants(fruits, "Fruit", "fruit");
+    addPlants(berries, "Berry", "berry");
+    addPlants(citrus, "Citrus", "citrus");
+    addPlants(herbs, "Herb", "herb");
+    addPlants(leafyGreens, "Leafy Green", "leafy");
+    addPlants(rootVeg, "Root Vegetable", "root");
+    addPlants(legumes, "Legume", "legume");
+    addPlants(melons, "Melon", "melon");
+    
+    return allPlants;
+  };
+
+  const plantsData = generatePlantDatabase(); // 100+ plants
+  let currentUser = null;
+  let posts = [];
+
+  const gardeningTips = [
+    { title: "Compost Making", desc: "Mix green and brown materials. Turn weekly for rich soil amendment.", color: "green" },
+    { title: "Smart Watering", desc: "Water deeply at base early morning. Mulch to retain moisture.", color: "blue" },
+    { title: "Natural Pest Control", desc: "Neem oil spray, companion planting (marigolds repel pests).", color: "red" },
+    { title: "Soil Health", desc: "Test pH annually. Add organic matter. Rotate crops.", color: "green" }
+  ];
+
+  const seasonalGuides = [
+    { season: "Spring", tasks: "Start seeds indoors, prepare beds, plant cool-season crops", icon: "fa-seedling" },
+    { season: "Summer", tasks: "Mulch, water deeply, harvest vegetables, watch for pests", icon: "fa-sun" },
+    { season: "Fall", tasks: "Plant garlic, clean debris, add compost, cover crops", icon: "fa-leaf" },
+    { season: "Winter", tasks: "Plan garden, maintain tools, start seeds indoors", icon: "fa-snowflake" }
+  ];
+
+  function loadInitialData() {
+    const storedPosts = localStorage.getItem("gardening_posts");
+    if (storedPosts) posts = JSON.parse(storedPosts);
+    else {
+      posts = [
+        { id: "p1", userId: "u1", username: "plantlover", content: "Just harvested my first tomatoes! So rewarding.", timestamp: Date.now() - 86400000, likes: 12, comments: [] },
+        { id: "p2", userId: "u2", username: "herbgarden", content: "My basil is thriving with regular pruning.", timestamp: Date.now() - 3600000, likes: 5, comments: [] }
+      ];
+      savePostsToLocal();
+    }
+    const storedUser = localStorage.getItem("gardening_current_user");
+    if (storedUser) currentUser = JSON.parse(storedUser);
+  }
+
+  function savePostsToLocal() { localStorage.setItem("gardening_posts", JSON.stringify(posts)); }
+  function saveCurrentUser() {
+    if (currentUser) localStorage.setItem("gardening_current_user", JSON.stringify(currentUser));
+    else localStorage.removeItem("gardening_current_user");
+  }
+
+  // Plant Gallery with filtering
+  let currentFilter = "All";
+  let searchTerm = "";
+
+  function renderPlantsGallery() {
+    let filtered = plantsData.filter(p => {
+      const matchesCategory = currentFilter === "All" || p.category === currentFilter;
+      const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+    
+    const categories = ["All", ...new Set(plantsData.map(p => p.category))];
+    
+    return `
+      <div class="card">
+        <h2 style="color: var(--green-primary);"><i class="fas fa-apple-alt"></i> Complete Plant Guide - ${plantsData.length}+ Vegetables, Fruits & Herbs</h2>
+        <p>Browse our extensive database with detailed growing instructions, health benefits, and harvesting tips.</p>
+        
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="plant-search" placeholder="Search plants by name..." value="${searchTerm}">
+        </div>
+        
+        <div class="category-filter">
+          ${categories.map(cat => `<span class="filter-chip ${currentFilter === cat ? 'active' : ''}" data-category="${cat}">${cat} (${cat === "All" ? plantsData.length : plantsData.filter(p => p.category === cat).length})</span>`).join('')}
+        </div>
+        
+        <div class="grid-4" id="plants-grid">
+          ${filtered.map(plant => `
+            <div class="plant-card" data-plant-id="${plant.id}">
+              <img src="${plant.image}" alt="${plant.name}" class="plant-img" onerror="this.src='https://via.placeholder.com/400x300?text=${plant.name}'">
+              <div class="plant-info">
+                <h3>${plant.name}</h3>
+                <span class="badge">${plant.category}</span>
+                <p style="font-size:0.85rem; margin-top:8px;"><i class="fas fa-sun"></i> ${plant.sunRequirement.substring(0, 30)}...</p>
+                <p style="font-size:0.85rem;"><i class="fas fa-tint"></i> ${plant.waterNeeds.substring(0, 30)}...</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${filtered.length === 0 ? '<p style="text-align:center;">No plants found. Try a different search.</p>' : `<p style="margin-top:1rem;">Showing ${filtered.length} of ${plantsData.length} plants</p>`}
+      </div>
+      <div id="plant-detail-modal" class="modal plant-detail-modal">
+        <div class="modal-content" id="plant-detail-content"></div>
+      </div>
+    `;
+  }
+
+  function showPlantDetail(plantId) {
+    const plant = plantsData.find(p => p.id === plantId);
+    if (!plant) return;
+    const modal = document.getElementById("plant-detail-modal");
+    const content = document.getElementById("plant-detail-content");
+    content.innerHTML = `
+      <div style="text-align: right;"><button id="close-detail-btn" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button></div>
+      <img src="${plant.image}" alt="${plant.name}" class="plant-detail-img" onerror="this.src='https://via.placeholder.com/600x250?text=${plant.name}'">
+      <h2>${plant.name} <span class="badge">${plant.category}</span></h2>
+      <div style="background:#f0f7f0; padding:1rem; border-radius:20px; margin:1rem 0;">
+        <h3><i class="fas fa-heartbeat" style="color:var(--red-accent);"></i> Health Benefits</h3>
+        <p>${plant.benefits}</p>
+      </div>
+      <div style="background:#e8f0fe; padding:1rem; border-radius:20px; margin:1rem 0;">
+        <h3><i class="fas fa-seedling"></i> How to Plant & Grow</h3>
+        <p>${plant.planting}</p>
+        <p><strong>Best Season:</strong> ${plant.season}</p>
+        <p><strong>Harvest Time:</strong> ${plant.harvest}</p>
+        <p><strong>Sunlight:</strong> ${plant.sunRequirement}</p>
+        <p><strong>Water Needs:</strong> ${plant.waterNeeds}</p>
+      </div>
+      <div style="background:#fff3e0; padding:1rem; border-radius:20px;">
+        <h3><i class="fas fa-info-circle"></i> Quick Tips</h3>
+        <p>• ${plant.category === "Vegetable" ? "Harvest when ripe for best flavor" : plant.category === "Herb" ? "Harvest leaves before flowering for best flavor" : "Pick when fully colored and slightly soft"}</p>
+        <p>• Mulch around base to retain moisture and suppress weeds</p>
+        <p>• Rotate crops annually to prevent soil-borne diseases</p>
+      </div>
+    `;
+    modal.style.display = "flex";
+    document.getElementById("close-detail-btn").onclick = () => modal.style.display = "none";
+    modal.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; };
+  }
+
+  // Registration First - Landing page with registration prompt
+  function renderLanding() {
+    return `
+      <div class="card" style="text-align: center; background: linear-gradient(135deg, rgba(44,110,47,0.1), rgba(30,111,159,0.1));">
+        <h1 style="color: var(--green-primary); font-size: 2.5rem;"><i class="fas fa-leaf"></i> Welcome to GreenThumb Community</h1>
+        <p style="font-size: 1.3rem; margin: 1rem 0;">Your ultimate guide to growing ${plantsData.length}+ vegetables, fruits, and herbs</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0;">
+          <button id="register-now-btn" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> Join the Community - Free</button>
+        </div>
+        <div class="grid-2" style="margin-top: 2rem;">
+          <div class="tip-card"><i class="fas fa-database" style="font-size: 2rem;"></i><h3>${plantsData.length}+ Plants</h3><p>Complete database with growing guides</p></div>
+          <div class="tip-card"><i class="fas fa-users" style="font-size: 2rem;"></i><h3>Active Community</h3><p>Share experiences and get tips</p></div>
+          <div class="tip-card"><i class="fas fa-calendar" style="font-size: 2rem;"></i><h3>Seasonal Guides</h3><p>Planting calendars for all seasons</p></div>
+          <div class="tip-card"><i class="fas fa-apple-alt" style="font-size: 2rem;"></i><h3>Health Benefits</h3><p>Nutritional information for each plant</p></div>
+        </div>
+      </div>
+      ${renderPlantsGallery()}
+      <div class="card">
+        <h2><i class="fas fa-calendar-alt"></i> Seasonal Planting Calendar</h2>
+        <div class="grid-2">
+          ${seasonalGuides.map(season => `<div class="tip-card"><i class="fas ${season.icon}" style="font-size: 2rem;"></i><h3>${season.season}</h3><p>${season.tasks}</p></div>`).join('')}
+        </div>
+      </div>
+      ${renderGardeningTips()}
+    `;
+  }
+
+  function renderGardeningTips() {
+    return `
+      <div class="card">
+        <h2><i class="fas fa-lightbulb"></i> Expert Gardening Tips</h2>
+        <div class="grid-2">
+          ${gardeningTips.map(tip => `<div class="tip-card"><h3>${tip.title}</h3><p>${tip.desc}</p></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderCommunity() {
+    if(!currentUser) return `<div class="card"><p>Please register or login to join the community discussions.</p><button id="goto-register" class="btn btn-primary">Register Now</button></div>`;
+    return `
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; flex-wrap:wrap;">
+          <h2><i class="fas fa-users"></i> Gardener's Community</h2>
+          <button id="create-post-btn" class="btn"><i class="fas fa-plus-circle"></i> Share Your Experience</button>
+        </div>
+        <div id="posts-container"></div>
+      </div>
+      <div id="post-modal" class="modal">
+        <div class="modal-content">
+          <h3>Share Your Gardening Story</h3>
+          <textarea id="new-post-content" rows="4" placeholder="What did you plant today? Any tips to share?"></textarea>
+          <div style="display:flex; gap:1rem; margin-top:1rem;">
+            <button id="submit-post-btn" class="btn btn-primary">Publish</button>
+            <button id="close-modal-btn" class="btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPostsList(postsArray) {
+    if(!postsArray.length) return "<p>No posts yet. Be the first to share!</p>";
+    return postsArray.map(post => `
+      <div class="post-item">
+        <div class="post-header"><span><i class="fas fa-user-circle"></i> ${escapeHtml(post.username)}</span><small>${new Date(post.timestamp).toLocaleString()}</small></div>
+        <div class="post-content">${escapeHtml(post.content)}</div>
+        <div class="like-section"><button class="like-btn" data-id="${post.id}"><i class="fas fa-heart"></i> ${post.likes} likes</button><span><i class="fas fa-comment"></i> ${post.comments.length} comments</span></div>
+        ${currentUser ? `<div style="display:flex; gap:8px; margin-top:10px;"><input type="text" placeholder="Add a comment..." id="comment-input-${post.id}" style="flex:1; padding:8px;"><button class="add-comment-btn" data-id="${post.id}" style="background:var(--blue-bright); border-radius:40px; padding:6px 14px;">Post</button></div>` : ""}
+        <div style="margin-top:10px;">${post.comments.map(c => `<div><strong>${escapeHtml(c.username)}</strong>: ${escapeHtml(c.text)}</div>`).join('')}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderRegister() {
+    return `
+      <div class="card" style="max-width: 500px; margin: 2rem auto;">
+        <h2 style="text-align: center;"><i class="fas fa-user-plus"></i> Join GreenThumb Community</h2>
+        <p style="text-align: center;">Access ${plantsData.length}+ plant guides and connect with gardeners</p>
+        <form id="register-form">
+          <div class="form-group"><input type="text" id="reg-username" placeholder="Choose a username" required></div>
+          <div class="form-group"><input type="email" id="reg-email" placeholder="Email (optional)"></div>
+          <div class="form-group"><textarea id="reg-bio" placeholder="Tell us about your gardening journey (optional)" rows="3"></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-check-circle"></i> Create Account</button>
+          <p style="text-align: center; margin-top: 1rem;">Already have an account? <a href="#" data-link="login" style="color: var(--blue-bright);">Login here</a></p>
+        </form>
+      </div>
+    `;
+  }
+
+  function renderLogin() {
+    return `
+      <div class="card" style="max-width: 500px; margin: 2rem auto;">
+        <h2 style="text-align: center;"><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+        <form id="login-form">
+          <div class="form-group"><input type="text" id="login-username" placeholder="Username" required></div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+          <p style="text-align: center; margin-top: 1rem;">New to GreenThumb? <a href="#" data-link="register" style="color: var(--blue-bright);">Create an account</a></p>
+        </form>
+      </div>
+    `;
+  }
+
+  function renderDashboard() {
+    if(!currentUser) return renderLogin();
+    const myPosts = posts.filter(p => p.userId === currentUser.id);
+    return `
+      <div class="card">
+        <h2>Welcome, ${currentUser.username}!</h2>
+        <div class="grid-2">
+          <div><i class="fas fa-leaf"></i> Your Posts: ${myPosts.length}</div>
+          <div><i class="fas fa-heart"></i> Community Activity: ${posts.reduce((acc,p)=>acc + p.likes + p.comments.length,0)} interactions</div>
+        </div>
+        <button id="edit-bio-btn" class="btn btn-outline">Edit Profile Bio</button>
+      </div>
+      ${renderPlantsGallery().substring(0, 500)}...
+    `;
+  }
+
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  let currentRoute = "landing";
+  function navigateTo(route) {
+    currentRoute = route;
+    let content = "";
+    if(route === "landing") content = renderLanding();
+    else if(route === "plants") content = renderPlantsGallery();
+    else if(route === "community") content = renderCommunity();
+    else if(route === "dashboard") content = renderDashboard();
+    else if(route === "register") content = renderRegister();
+    else if(route === "login") content = renderLogin();
+    else content = renderLanding();
+    document.getElementById("app-root").innerHTML = content;
+    attachPageSpecificEvents();
+    updateNavbar();
+  }
+
+  function updateNavbar() {
+    const navbarDiv = document.getElementById("navbar-container");
+    navbarDiv.innerHTML = `<div class="navbar"><div class="logo"><i class="fas fa-leaf"></i> GreenThumb</div><div class="nav-links"><a href="#" data-link="landing">Home</a><a href="#" data-link="plants">Plants (${plantsData.length}+)</a>${currentUser ? '<a href="#" data-link="community">Community</a>' : ''}<a href="#" data-link="dashboard">Dashboard</a>${!currentUser ? '<a href="#" data-link="register" class="nav-btn">Register</a>' : '<a href="#" id="logout-btn" class="nav-btn">Logout</a>'}${currentUser ? `<span class="user-greeting"><i class="fas fa-user"></i> ${currentUser.username}</span>` : ''}</div></div>`;
+    document.querySelectorAll("[data-link]").forEach(link => link.addEventListener("click", (e) => { e.preventDefault(); navigateTo(link.getAttribute("data-link")); }));
+    const logoutBtn = document.getElementById("logout-btn");
+    if(logoutBtn) logoutBtn.addEventListener("click", () => { currentUser = null; saveCurrentUser(); navigateTo("landing"); });
+  }
+
+  function attachPageSpecificEvents() {
+    // Plant search and filters
+    const searchInput = document.getElementById("plant-search");
+    if(searchInput) {
+      searchInput.addEventListener("input", (e) => { searchTerm = e.target.value; navigateTo("plants"); });
+    }
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => { currentFilter = chip.getAttribute("data-category"); navigateTo("plants"); });
+    });
+    document.querySelectorAll(".plant-card").forEach(card => {
+      const plantId = parseInt(card.getAttribute("data-plant-id"));
+      if(plantId) card.addEventListener("click", () => showPlantDetail(plantId));
+    });
+    
+    const createBtn = document.getElementById("create-post-btn");
+    const modal = document.getElementById("post-modal");
+    if(createBtn && modal) {
+      createBtn.onclick = () => modal.style.display = "flex";
+      document.getElementById("close-modal-btn")?.addEventListener("click", ()=> modal.style.display = "none");
+      document.getElementById("submit-post-btn")?.addEventListener("click", () => {
+        const content = document.getElementById("new-post-content").value.trim();
+        if(content && currentUser) {
+          posts.unshift({ id: Date.now().toString(), userId: currentUser.id, username: currentUser.username, content, timestamp: Date.now(), likes: 0, comments: [] });
+          savePostsToLocal();
+          modal.style.display = "none";
+          navigateTo("community");
+        } else alert("Please login and write something");
+      });
+    }
+    
+    const postsContainer = document.getElementById("posts-container");
+    if(postsContainer) { postsContainer.innerHTML = renderPostsList(posts); attachPostInteractions(); }
+    
+    const registerForm = document.getElementById("register-form");
+    if(registerForm) {
+      registerForm.onsubmit = (e) => {
+        e.preventDefault();
+        const username = document.getElementById("reg-username").value.trim();
+        const bio = document.getElementById("reg-bio").value.trim();
+        if(!username) return alert("Username required");
+        let users = JSON.parse(localStorage.getItem("gardening_users") || "[]");
+        if(users.find(u => u.username === username)) return alert("Username taken. Please choose another.");
+        const newUser = { id: "u"+Date.now(), username, bio: bio || "Gardening enthusiast" };
+        users.push(newUser);
+        localStorage.setItem("gardening_users", JSON.stringify(users));
+        currentUser = newUser;
+        saveCurrentUser();
+        navigateTo("landing");
+      };
+    }
+    
+    const loginForm = document.getElementById("login-form");
+    if(loginForm) {
+      loginForm.onsubmit = (e) => {
+        e.preventDefault();
+        const username = document.getElementById("login-username").value.trim();
+        if(username) {
+          let users = JSON.parse(localStorage.getItem("gardening_users") || "[]");
+          let user = users.find(u => u.username === username);
+          if(!user) return alert("User not found. Please register first.");
+          currentUser = user;
+          saveCurrentUser();
+          navigateTo("landing");
+        }
+      };
+    }
+    
+    const registerBtn = document.getElementById("register-now-btn");
+    if(registerBtn) registerBtn.onclick = () => navigateTo("register");
+    const gotoRegister = document.getElementById("goto-register");
+    if(gotoRegister) gotoRegister.onclick = () => navigateTo("register");
+    
+    const editBio = document.getElementById("edit-bio-btn");
+    if(editBio && currentUser) editBio.onclick = () => { const newBio = prompt("Update your bio:", currentUser.bio); if(newBio !== null) { currentUser.bio = newBio; saveCurrentUser(); navigateTo("dashboard"); } };
+  }
+
+  function attachPostInteractions() {
+    document.querySelectorAll(".like-btn").forEach(btn => btn.addEventListener("click", (e) => { if(!currentUser) return alert("Login to like"); const post = posts.find(p => p.id === e.currentTarget.getAttribute("data-id")); if(post) { post.likes++; savePostsToLocal(); navigateTo("community"); } }));
+    document.querySelectorAll(".add-comment-btn").forEach(btn => btn.addEventListener("click", (e) => { if(!currentUser) return alert("Login to comment"); const postId = e.currentTarget.getAttribute("data-id"); const input = document.getElementById(`comment-input-${postId}`); if(input?.value.trim()) { const post = posts.find(p => p.id === postId); post?.comments.push({ username: currentUser.username, text: input.value.trim() }); savePostsToLocal(); navigateTo("community"); } else alert("Write a comment"); }));
+  }
+
+  loadInitialData();
+  updateNavbar();
+  navigateTo("landing");
+</script>
+</body>
+</html>
